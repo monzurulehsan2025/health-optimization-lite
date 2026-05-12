@@ -42,6 +42,23 @@ def get_action_items():
         "description": "Your last body composition analysis was over 12 months ago."
     }
 
+@app.get("/api/clinical-team")
+def get_clinical_team():
+    return [
+        {
+            "id": 1,
+            "name": "Dr. Sarah Chen",
+            "role": "Primary Preventative Physician",
+            "avatarBg": "14b8a6"
+        },
+        {
+            "id": 2,
+            "name": "Marcus L.",
+            "role": "Health Coach",
+            "avatarBg": "8b5cf6"
+        }
+    ]
+
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="127.0.0.1", port=8000)

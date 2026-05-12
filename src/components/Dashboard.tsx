@@ -6,20 +6,23 @@ const Dashboard = () => {
   const [healthScore, setHealthScore] = useState<{currentScore: number, history: any[]}>({ currentScore: 0, history: [] });
   const [biomarkers, setBiomarkers] = useState<any[]>([]);
   const [actionItem, setActionItem] = useState<{title: string, description: string}>({ title: '', description: '' });
+  const [clinicalTeam, setClinicalTeam] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [scoreRes, markersRes, actionRes] = await Promise.all([
+        const [scoreRes, markersRes, actionRes, teamRes] = await Promise.all([
           fetch('http://127.0.0.1:8000/api/health-score'),
           fetch('http://127.0.0.1:8000/api/biomarkers'),
-          fetch('http://127.0.0.1:8000/api/action-items')
+          fetch('http://127.0.0.1:8000/api/action-items'),
+          fetch('http://127.0.0.1:8000/api/clinical-team')
         ]);
         
         setHealthScore(await scoreRes.json());
         setBiomarkers(await markersRes.json());
         setActionItem(await actionRes.json());
+        setClinicalTeam(await teamRes.json());
       } catch (error) {
         console.error("Error fetching data:", error);
       } finally {
@@ -146,27 +149,18 @@ const Dashboard = () => {
           <h3 className="text-lg font-semibold" style={{ marginBottom: '1.5rem' }}>Your Clinical Team</h3>
           
           <div className="flex flex-col gap-4">
-            <div className="flex items-center gap-4">
-              <img src="https://ui-avatars.com/api/?name=Dr+Sarah+Chen&background=14b8a6&color=fff" alt="Dr. Chen" style={{ width: 48, height: 48, borderRadius: '50%' }} />
-              <div style={{ flex: 1 }}>
-                <h4 className="font-semibold">Dr. Sarah Chen</h4>
-                <p className="text-sm text-muted">Primary Preventative Physician</p>
+            {clinicalTeam.map((member) => (
+              <div key={member.id} className="flex items-center gap-4">
+                <img src={`https://ui-avatars.com/api/?name=${member.name.replace(/ /g, '+')}&background=${member.avatarBg}&color=fff`} alt={member.name} style={{ width: 48, height: 48, borderRadius: '50%' }} />
+                <div style={{ flex: 1 }}>
+                  <h4 className="font-semibold">{member.name}</h4>
+                  <p className="text-sm text-muted">{member.role}</p>
+                </div>
+                <button className="text-sm border-button" style={{ border: '1px solid var(--border-color)', padding: '0.5rem 1rem', borderRadius: 'var(--radius-md)', transition: 'background 0.2s' }} onMouseEnter={e => e.currentTarget.style.background = 'var(--bg-panel-hover)'} onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
+                  Message
+                </button>
               </div>
-              <button className="text-sm border-button" style={{ border: '1px solid var(--border-color)', padding: '0.5rem 1rem', borderRadius: 'var(--radius-md)', transition: 'background 0.2s' }} onMouseEnter={e => e.currentTarget.style.background = 'var(--bg-panel-hover)'} onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
-                Message
-              </button>
-            </div>
-            
-            <div className="flex items-center gap-4">
-              <img src="https://ui-avatars.com/api/?name=Marcus+L&background=8b5cf6&color=fff" alt="Marcus" style={{ width: 48, height: 48, borderRadius: '50%' }} />
-              <div style={{ flex: 1 }}>
-                <h4 className="font-semibold">Marcus L.</h4>
-                <p className="text-sm text-muted">Health Coach</p>
-              </div>
-              <button className="text-sm border-button" style={{ border: '1px solid var(--border-color)', padding: '0.5rem 1rem', borderRadius: 'var(--radius-md)', transition: 'background 0.2s' }} onMouseEnter={e => e.currentTarget.style.background = 'var(--bg-panel-hover)'} onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
-                Message
-              </button>
-            </div>
+            ))}
           </div>
 
           <div style={{ marginTop: '2rem', padding: '1rem', background: 'rgba(59, 130, 246, 0.1)', borderRadius: 'var(--radius-md)', border: '1px solid rgba(59, 130, 246, 0.2)' }}>
