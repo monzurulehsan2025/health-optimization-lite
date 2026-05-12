@@ -71,3 +71,50 @@ export default defineConfig([
   },
 ])
 ```
+
+## Sample Requests and Responses
+
+### 1. Health Score
+**Request:**
+`GET /api/health-score`
+
+**Response:**
+```json
+{
+  "currentScore": 85,
+  "history": [
+    {"name": "Jan", "score": 72},
+    {"name": "Feb", "score": 75},
+    {"name": "Mar", "score": 78},
+    {"name": "Apr", "score": 76},
+    {"name": "May", "score": 82},
+    {"name": "Jun", "score": 85}
+  ]
+}
+```
+
+### 2. Biomarkers
+**Request:**
+`GET /api/biomarkers`
+
+**Response:**
+```json
+[
+  {"id": 1, "name": "LDL Cholesterol", "value": "95 mg/dL", "status": "optimal", "change": "-12%"},
+  {"id": 2, "name": "HbA1c", "value": "5.2 %", "status": "optimal", "change": "-0.1%"},
+  {"id": 3, "name": "Vitamin D", "value": "28 ng/mL", "status": "warning", "change": "+2%"},
+  {"id": 4, "name": "ApoB", "value": "88 mg/dL", "status": "warning", "change": "+5%"}
+]
+```
+
+### 3. Action Items
+**Request:**
+`GET /api/action-items`
+
+**Response:**
+```json
+{
+  "title": "Schedule your DEXA scan",
+  "description": "Your last body composition analysis was over 12 months ago."
+}
+```
